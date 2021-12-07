@@ -6,11 +6,9 @@ import matplotlib.pyplot as plt
 def initCoords(resolution):
 	grid = []
 	for x in range(resolution):
-		j = 0
 		array = []
-		while j < resolution:
-			array.append((x * resolution) + j)
-			j = j + 1
+		for y in range(resolution):
+			array.append((x * resolution) + y)
 		grid.append(array)
 	coordinates = np.array(grid)
 
@@ -19,8 +17,10 @@ def initCoords(resolution):
 
 def main():
 	# coordRange = int(input("Please enter the range of the simulation: "))
-	coordRange = 8
+	coordRange = 256
 	coords = initCoords(coordRange)
+
+	print(coords)
 
 	# plt.imshow(coords,cmap="coolwarm")
 	# plt.title("Plot 2D array")
