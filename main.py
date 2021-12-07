@@ -12,7 +12,7 @@ def initCoords(resolution):
 		grid.append(array)
 	coordinates = np.array(grid)
 
-	return coordinates.transpose()
+	return coordinates
 
 
 def main():
