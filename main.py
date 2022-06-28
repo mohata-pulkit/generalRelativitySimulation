@@ -4,44 +4,51 @@ import numpy as np
 import scipy as sp
 import matplotlib.pyplot as plt
 
-def initCoords(resolution):
-	grid = []
-	for x in range(resolution):
-		array = []
-		for y in range(resolution):
-			array.append((x * resolution) + y)
-		grid.append(array)
+def initCoords(x, y):
+	coords = np.zeros([x, y])
+	return coords
+
+def addPointMass(field, mass, position):
+	G = 1
+
+	newField = field
 	
-	coordinates = np.array(grid)
-
-	return coordinates
-
-def addPointMass(coords, mass, position):
-	G = 6.67430 * (10**(-11))
-
-	newCoords = []
-
-	for x in coords.tolist():
-		array = []
-		for y in x:
-			if((m.sqrt((((y % len(x)) - position[0])**2) + (((m.floor(y / len(x)) - position[1])**2)))) != 0):
-				array.append((G * mass * -1)/(m.sqrt((((y % len(x)) - position[0])**2) + (((m.floor(y / len(x)) - position[1])**2)))))
+	x = 0
+	while x < len(newField):
+		y = 0
+		while y < len(newField[0]):
+			if x == position[0] and y == position[1]:
+				newField[x, y] = newField[x, y] + (G * mass * -1)
 			else:
-				array.append((G * mass * -1))
-		newCoords.append(array)
-
-	newCoords = np.array(newCoords)
-	return newCoords
+				newField[x, y] = newField[x, y] + ((G * mass * -1) / ((x - position[0])**2 + (y - position[1])**2))
+			y = y + 1
+		x = x + 1
+	return newField
 
 def main():
-	# coordRange = int(input("Please enter the range of the simulation: "))
-	coordRange = 256
-	coords = initCoords(coordRange)
+	range = 128
+	field = initCoords(range, range)
+	field = addPointMass(field, 5e24, [31, 31])
+	field = addPointMass(field, 5e23, [95, 95])
 
-	coords = addPointMass(coords, 5e10, [128, 128])
+	fig = plt.figure()
+	ax = fig.add_subplot(projection='3d')
 
-	plt.imshow(coords)
-	plt.title("Plot 2D array")
-	plt.colorbar()
+	x = np.linspace(0, range, range)
+	y = np.linspace(0, range, range)
+
+	X, Y = np.meshgrid(x, y)
+
+	ax.plot_wireframe(X, Y, field)
+
+	# x = 0
+	# while x < range:
+	# 	y = 0
+	# 	while y < range:
+	# 		ax.scatter(x, y, field[x, y])
+	# 		y = y + 1
+	# 	x = x + 1
+
 	plt.show()
+
 main()
